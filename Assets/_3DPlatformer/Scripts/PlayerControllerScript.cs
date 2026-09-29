@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 public class PlayerControllerScript : MonoBehaviour
@@ -13,9 +14,21 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] Vector3 moveDirection;
     public float moveSpeed = 4;
     public float runSpeed = 8;
-    public float jumpForce = 4;
     public float turnSpeed = 0.1f;
     private float turnSmoothVelocity;
+
+    [Header("Jumping Variables")]
+    public float jumpForce = 1.5f;
+    public float quickJumpMultiplier = 0.5f;
+    public TMP_Text coyoteText;
+    public TMP_Text bufferText;
+
+    //coyote and buffer variables
+    public float coyoteTimer = 0.5f;
+    public float jumpBufferTimer = 0.5f;
+    [SerializeField] private float coyoteTime;
+    [SerializeField] private float jumpBuffer;
+     
 
     [Header("Player Physics Variables")]
     public float gravityForce = -8;
@@ -50,6 +63,16 @@ public class PlayerControllerScript : MonoBehaviour
         HandlePhysics();
         HandleInput();
         HandleMovement();
+
+        //handle jumping values
+        if (isGrounded) coyoteTime = coyoteTimer;
+        else coyoteTime -= Time.deltaTime;
+
+        jumpBuffer -= Time.deltaTime;
+        if (jumpBuffer < 0) jumpBuffer = 0;
+
+        coyoteText.text = "Coyote Time = " + coyoteTime.ToString();
+        bufferText.text = "Jump Buffer = " + jumpBuffer.ToString();
     }
 
 
@@ -57,9 +80,11 @@ public class PlayerControllerScript : MonoBehaviour
     {
         groundCollider = Physics.OverlapSphere(groundCheck.position, 0.2f, groundLayer);
         if (groundCollider.Length > 0 )        
-            isGrounded = true;        
+            isGrounded = true;
         else
             isGrounded = false;
+
+        _anim.SetBool("Grounded", isGrounded);
 
         if (isGrounded && playerVelocity.y < 0)
             playerVelocity.y = -0.5f;
@@ -70,9 +95,23 @@ public class PlayerControllerScript : MonoBehaviour
     private void HandleInput()
     {
         moveInput = _inputs.Player.Move.ReadValue<Vector2>().normalized;
-        if(_inputs.Player.Jump.triggered && isGrounded)
+        if (_inputs.Player.Jump.triggered)
         {
+            jumpBuffer = jumpBufferTimer;
+        }
+        //Player Jump
+        if(jumpBuffer > 0 && coyoteTime > 0)
+        {
+            jumpBuffer = 0;
+            coyoteTime = 0;
             playerVelocity.y = Mathf.Sqrt(jumpForce * -3f * gravityForce);
+            _anim.SetTrigger("Jump");
+        }
+
+        //Quick Jump
+        if(_inputs.Player.Jump.WasReleasedThisFrame() && playerVelocity.y > 0)
+        {
+            playerVelocity.y *= quickJumpMultiplier;
         }
     }
 
@@ -81,6 +120,7 @@ public class PlayerControllerScript : MonoBehaviour
         moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
 
         _anim.SetFloat("Speed", moveDirection.magnitude, 0.1f, Time.deltaTime);
+        _anim.SetFloat("VSpeed", playerVelocity.y);
         if(moveDirection.magnitude > 0.1f)
         {
             float targetAngle = Mathf.Atan2(moveDirection.x, 
