@@ -119,7 +119,7 @@ public class PlayerControllerScript : MonoBehaviour
     {
         moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
 
-        _anim.SetFloat("Speed", moveDirection.magnitude, 0.1f, Time.deltaTime);
+        _anim.SetFloat("Speed", moveDirection.magnitude, 0.05f, Time.deltaTime);
         _anim.SetFloat("VSpeed", playerVelocity.y);
         if(moveDirection.magnitude > 0.1f)
         {
