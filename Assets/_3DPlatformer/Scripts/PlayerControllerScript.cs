@@ -39,6 +39,7 @@ public class PlayerControllerScript : MonoBehaviour
 
     [Header("Boolean Variables")]
     public bool isGrounded;
+    public bool inAction;
 
     private void Awake()
     {
@@ -61,8 +62,15 @@ public class PlayerControllerScript : MonoBehaviour
     private void Update()
     {
         HandlePhysics();
-        HandleInput();
-        HandleMovement();
+
+        if (!inAction)
+        {
+            HandleInput();
+            HandleMovement();
+        }
+
+        //Set animation value
+        _anim.SetBool("inAction", inAction);
 
         //handle jumping values
         if (isGrounded) coyoteTime = coyoteTimer;
@@ -88,7 +96,7 @@ public class PlayerControllerScript : MonoBehaviour
 
         if (isGrounded && playerVelocity.y < 0)
             playerVelocity.y = -0.5f;
-        else
+        else if (!inAction)
             playerVelocity.y += gravityForce * Time.deltaTime;
     }
 
@@ -112,6 +120,12 @@ public class PlayerControllerScript : MonoBehaviour
         if(_inputs.Player.Jump.WasReleasedThisFrame() && playerVelocity.y > 0)
         {
             playerVelocity.y *= quickJumpMultiplier;
+        }
+
+        if(_inputs.Player.Attack.triggered && !inAction)
+        {
+            inAction = true;
+            _anim.SetTrigger("Attack");
         }
     }
 
