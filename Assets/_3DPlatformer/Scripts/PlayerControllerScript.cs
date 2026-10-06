@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -22,6 +23,9 @@ public class PlayerControllerScript : MonoBehaviour
     public float quickJumpMultiplier = 0.5f;
     public TMP_Text coyoteText;
     public TMP_Text bufferText;
+    public int numberOfJumps = 2;
+    [SerializeField] private int _jumps;
+
 
     //coyote and buffer variables
     public float coyoteTimer = 0.5f;
@@ -75,6 +79,7 @@ public class PlayerControllerScript : MonoBehaviour
         //handle jumping values
         if (isGrounded) coyoteTime = coyoteTimer;
         else coyoteTime -= Time.deltaTime;
+        if (isGrounded) _jumps = numberOfJumps;
 
         jumpBuffer -= Time.deltaTime;
         if (jumpBuffer < 0) jumpBuffer = 0;
@@ -108,12 +113,25 @@ public class PlayerControllerScript : MonoBehaviour
             jumpBuffer = jumpBufferTimer;
         }
         //Player Jump
-        if(jumpBuffer > 0 && coyoteTime > 0)
+        if(jumpBuffer > 0)
         {
-            jumpBuffer = 0;
-            coyoteTime = 0;
-            playerVelocity.y = Mathf.Sqrt(jumpForce * -3f * gravityForce);
-            _anim.SetTrigger("Jump");
+            if (coyoteTime > 0)
+            {
+                jumpBuffer = 0;
+                coyoteTime = 0;
+                playerVelocity.y = Mathf.Sqrt(jumpForce * -3f * gravityForce);
+                _anim.SetTrigger("Jump");
+            }
+            else if (_jumps > 0)
+            {
+                playerVelocity.y = 0;
+                _jumps--;
+                jumpBuffer = 0;
+                coyoteTime = 0;
+                playerVelocity.y = Mathf.Sqrt(jumpForce * -3f * gravityForce);
+                _anim.SetTrigger("Jump");
+            }
+            
         }
 
         //Quick Jump
@@ -149,5 +167,9 @@ public class PlayerControllerScript : MonoBehaviour
         cc.Move(playerVelocity * Time.deltaTime);
     }
 
+    /*IEnumerator Jump()
+    {
 
+        return false;
+    }*/
 }
