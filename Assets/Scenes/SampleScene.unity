@@ -493,11 +493,11 @@ MonoBehaviour:
   moveSpeed: 4
   runSpeed: 8
   turnSpeed: 0.05
-  jumpForce: 4
+  jumpForce: 3
   quickJumpMultiplier: 0.5
   coyoteText: {fileID: 2023957903}
   bufferText: {fileID: 781037485}
-  numberOfJumps: 2
+  numberOfJumps: 1
   _jumps: 0
   coyoteTimer: 0.15
   jumpBufferTimer: 0.15
