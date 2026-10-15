@@ -2,14 +2,16 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.Events;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
 
     [Header("Panel")]
     public GameObject pausePanel;
-
+    public GameObject gameOverPanel;
+    public TMP_Text finalCoinText;
+    public int coins;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void pauseGame()
@@ -24,6 +26,15 @@ public class GameManager : MonoBehaviour
         pausePanel.SetActive(false);
     }
 
+    public void Gameover()
+    {
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+            finalCoinText.text = "Coins Collected: " + coins.ToString();
+            Time.timeScale = 0;
+        }
+    }
     public void RestartGame()
     {
         UnpauseGame();
@@ -46,7 +57,7 @@ public class GameManager : MonoBehaviour
 
     public void OnPause(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && pausePanel !=null)
         {
             pauseGame();
         }

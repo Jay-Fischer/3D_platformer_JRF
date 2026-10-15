@@ -59,7 +59,7 @@ public class EnemyHealthScript : MonoBehaviour
         enemyHealth--;
         anim.SetTrigger("Hurt");
         Instantiate(impactEffect, impactSpawnPoint.position, Quaternion.identity);
-        yield return new WaitForSeconds(0.025f);
+        yield return new WaitForSeconds(0.1f);
         HitStopManager.Instance.DoHitStop(0.15f, 0);
         rb.AddForce(transform.forward * knockBackForce, ForceMode.Impulse);
         _skin.material = _hurtMat;

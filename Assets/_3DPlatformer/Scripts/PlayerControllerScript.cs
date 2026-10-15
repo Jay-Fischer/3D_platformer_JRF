@@ -27,7 +27,7 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] private int _jumps;
 
 
-    //coyote and buffer variables
+    [Header("coyote and buffer variables")]
     public float coyoteTimer = 0.5f;
     public float jumpBufferTimer = 0.5f;
     [SerializeField] private float coyoteTime;
@@ -44,6 +44,7 @@ public class PlayerControllerScript : MonoBehaviour
     [Header("Boolean Variables")]
     public bool isGrounded;
     public bool inAction;
+    public bool hurt;
 
     private void Awake()
     {
@@ -67,7 +68,7 @@ public class PlayerControllerScript : MonoBehaviour
     {
         HandlePhysics();
 
-        if (!inAction)
+        if (!inAction && !hurt)
         {
             HandleInput();
             HandleMovement();
