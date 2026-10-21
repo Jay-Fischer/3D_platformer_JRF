@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
@@ -43,5 +44,13 @@ public class SoundManager : MonoBehaviour
     public void PlaySound2D(string soundName)
     {
         sfx2DSource.PlayOneShot(sfxLibrary.GetClipFromName(soundName));
+    }
+
+    public void PlayDelayedSound(string soundName, float delay)
+    {
+        if (!sfx2DSource.isPlaying){
+            PlaySound2D(soundName);
+            
+        }
     }
 }

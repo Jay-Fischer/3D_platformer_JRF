@@ -24,7 +24,7 @@ public class PlayerHealthScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Enemy" && !isHurt)
+        if(other.gameObject.tag == "EnemyHurtTrigger" && !isHurt)
         {
             StartCoroutine(onHurt());
         }
@@ -37,6 +37,7 @@ public class PlayerHealthScript : MonoBehaviour
         health--;
         healthtext.text = "Health: " + health.ToString();
         _anim.SetTrigger("Hurt");
+        SoundManager.Instance.PlaySound2D("Hurt");
         yield return new WaitForSeconds(0.25f);
         HitStopManager.Instance.DoHitStop(0.15f, 0);
         if (health > 0)

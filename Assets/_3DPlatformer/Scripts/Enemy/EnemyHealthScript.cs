@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyHealthScript : MonoBehaviour
 {
@@ -29,14 +30,18 @@ public class EnemyHealthScript : MonoBehaviour
 
     public int enemyHealth;
     [SerializeField] Rigidbody rb;
+    [SerializeField] NavMeshAgent agent;
 
     [SerializeField] private bool isHurt;
+    EnemyBehavior behaviorScript;
 
     Animator anim;
 
     public float knockBackForce = -10f;
     private void Awake()
     {
+        behaviorScript = GetComponent<EnemyBehavior>();
+        agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
         _skin = GetComponentInChildren<SkinnedMeshRenderer>();
         anim = GetComponentInChildren<Animator>();
@@ -56,19 +61,25 @@ public class EnemyHealthScript : MonoBehaviour
     IEnumerator TakeDamage()
     {
         isHurt = true;
+        behaviorScript.ToggleHurt(isHurt);
         enemyHealth--;
         anim.SetTrigger("Hurt");
         Instantiate(impactEffect, impactSpawnPoint.position, Quaternion.identity);
         yield return new WaitForSeconds(0.1f);
         HitStopManager.Instance.DoHitStop(0.15f, 0);
+        agent.enabled = false;
         rb.AddForce(transform.forward * knockBackForce, ForceMode.Impulse);
         _skin.material = _hurtMat;
+        SoundManager.Instance.PlaySound2D("Hurt");
 
-        if(enemyHealth > 0)
+        if (enemyHealth > 0)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.1f);            
             _skin.material = _baseMat;
             isHurt = false;
+            behaviorScript.ToggleHurt(isHurt);
+            yield return new WaitForSeconds(0.5f);
+            agent.enabled = true;
         }
         else 
             StartCoroutine(EnemyDeath());

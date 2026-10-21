@@ -26,6 +26,7 @@ public class CoinScript : MonoBehaviour
             isCollected = true;
             rb.AddForce(Vector3.up * upwardForce, ForceMode.Impulse);
             Destroy(gameObject, 0.5f);
+            SoundManager.Instance.PlaySound2D("Coin");
         }
     }
 

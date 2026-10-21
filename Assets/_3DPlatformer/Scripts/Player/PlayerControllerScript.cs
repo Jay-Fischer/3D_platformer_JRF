@@ -141,10 +141,12 @@ public class PlayerControllerScript : MonoBehaviour
             playerVelocity.y *= quickJumpMultiplier;
         }
 
+        //Attack
         if(_inputs.Player.Attack.triggered && !inAction)
         {
             inAction = true;
             _anim.SetTrigger("Attack");
+            SoundManager.Instance.PlaySound2D("Weapon");
         }
     }
 
@@ -163,7 +165,8 @@ public class PlayerControllerScript : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, _angle, 0);
             Vector3 newDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
             cc.Move(newDirection * moveSpeed * Time.deltaTime);
-            
+            if(isGrounded)
+                SoundManager.Instance.PlayDelayedSound("Footsteps", 0.1f);
         }
         cc.Move(playerVelocity * Time.deltaTime);
     }
