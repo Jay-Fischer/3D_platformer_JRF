@@ -170,10 +170,4 @@ public class PlayerControllerScript : MonoBehaviour
         }
         cc.Move(playerVelocity * Time.deltaTime);
     }
-
-    /*IEnumerator Jump()
-    {
-
-        return false;
-    }*/
 }

@@ -22,7 +22,6 @@ public class SoundManager : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
 
         sfx2DSource = GetComponentInChildren<AudioSource>();

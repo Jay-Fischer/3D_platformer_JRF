@@ -30,6 +30,7 @@ public class PlayerHealthScript : MonoBehaviour
         }
     }
 
+
     IEnumerator onHurt()
     {
         isHurt = true;

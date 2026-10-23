@@ -21,12 +21,13 @@ public class CoinScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Player" && canCollect)
+        if(other.gameObject.tag == "Player" && canCollect && !isCollected)
         {
             isCollected = true;
             rb.AddForce(Vector3.up * upwardForce, ForceMode.Impulse);
             Destroy(gameObject, 0.5f);
             SoundManager.Instance.PlaySound2D("Coin");
+            GameManager.Instance.AddCoin();
         }
     }
 

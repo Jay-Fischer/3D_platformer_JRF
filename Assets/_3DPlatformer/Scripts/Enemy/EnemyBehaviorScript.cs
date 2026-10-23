@@ -104,7 +104,6 @@ public class EnemyBehavior : MonoBehaviour
 
     public void Wander()
     {
-        Debug.Log("Wandering...");
         if (!nav.pathPending && nav.remainingDistance <= returnDistance)
         {
             anim.SetBool("Walking", false);
@@ -119,11 +118,9 @@ public class EnemyBehavior : MonoBehaviour
         if (nav.enabled != false){
             anim.SetBool("Running", true);
             nav.SetDestination(targetPlayer.position);
-            Debug.Log("Pursuing...");
             //Distance Calculation
             Vector3 positionOffset = targetPlayer.position - transform.position;
             float distanceToPlayer = positionOffset.magnitude;
-            Debug.Log("Calculating Distance...");
 
             //Angle Calculation
             Vector3 directionToPlayer = (targetPlayer.position - transform.position).normalized;
@@ -137,7 +134,6 @@ public class EnemyBehavior : MonoBehaviour
     }
     public void Return(){
     if (nav.enabled != false){
-            Debug.Log("Returning to Spawn Point");
             Vector3 positionOffset = startLocation - transform.position;
             float distanceToPoint = positionOffset.magnitude;
             if (distanceToPoint <= (returnDistance * returnDistance))
@@ -153,7 +149,6 @@ public class EnemyBehavior : MonoBehaviour
         anim.SetTrigger("Attack");
         rb.AddForce(transform.forward * attackForce, ForceMode.Impulse);
 
-        Debug.Log("I ATTACK!!");
         yield return new WaitForSeconds(0.5f);
         currentState = EnemyState.Recovery;
         attacking = false;
